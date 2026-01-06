@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -17,6 +17,10 @@
             min-height: 100vh;
             overflow-x: hidden;
             color: #fff;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         #fireworks-canvas {
@@ -26,7 +30,7 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            pointer-events: none;
+            pointer-events: auto;
         }
 
         .content-wrapper {
@@ -131,8 +135,14 @@
         }
 
         @keyframes swing {
-            0%, 100% { transform: rotate(-5deg); }
-            50% { transform: rotate(5deg); }
+            0% { transform: rotate(-8deg) translateX(-2px); }
+            15% { transform: rotate(-5deg) translateX(-1px); }
+            30% { transform: rotate(0deg) translateX(0px); }
+            45% { transform: rotate(3deg) translateX(1px); }
+            60% { transform: rotate(6deg) translateX(2px); }
+            75% { transform: rotate(4deg) translateX(1px); }
+            90% { transform: rotate(-2deg) translateX(-1px); }
+            100% { transform: rotate(-8deg) translateX(-2px); }
         }
 
         .music-player {
@@ -410,6 +420,7 @@
             position: relative;
             max-height: 80vh;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .ai-close-btn {
@@ -466,6 +477,9 @@
             color: #fff;
             font-size: 0.95rem;
             transition: all 0.3s ease;
+            -webkit-appearance: none;
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
         }
 
         .ai-input-field:focus {
@@ -489,11 +503,17 @@
             cursor: pointer;
             transition: all 0.3s ease;
             white-space: nowrap;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .ai-generate-btn:hover {
             background: rgba(255, 255, 255, 0.4);
             transform: scale(1.05);
+        }
+
+        .ai-generate-btn:active {
+            transform: scale(0.95);
         }
 
         .ai-loading {
@@ -513,6 +533,7 @@
             font-size: 1rem;
             max-height: 400px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .ai-copy-btn {
@@ -532,6 +553,27 @@
         .ai-copy-btn:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.02);
+        }
+
+        .ai-save-btn {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ffd93d 0%, #ff6b6b 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(255, 217, 61, 0.3);
+        }
+
+        .ai-save-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(255, 217, 61, 0.5);
         }
 
         .ai-blessing-section.hidden {
@@ -571,6 +613,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .ai-trigger-btn:hover {
@@ -595,19 +639,60 @@
             border-radius: 10px;
             z-index: 3;
             display: none;
+            opacity: 0;
+            transform-origin: top center;
         }
 
         .couplet.left {
             left: 10px;
+            animation: unfoldLeft 1.5s ease-out forwards;
         }
 
         .couplet.right {
             right: 10px;
+            animation: unfoldRight 1.5s ease-out forwards;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes unfoldLeft {
+            0% {
+                opacity: 0;
+                transform: translateY(-50%) rotateY(-90deg) translateX(-50px);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translateY(-50%) rotateY(-45deg) translateX(-25px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(-50%) rotateY(0deg) translateX(0px);
+            }
+        }
+
+        @keyframes unfoldRight {
+            0% {
+                opacity: 0;
+                transform: translateY(-50%) rotateY(90deg) translateX(50px);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translateY(-50%) rotateY(45deg) translateX(25px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(-50%) rotateY(0deg) translateX(0px);
+            }
         }
 
         @media (min-width: 768px) {
             .couplet {
                 display: block;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .couplet {
+                display: none;
             }
         }
 
@@ -620,6 +705,127 @@
         .footer p {
             font-size: 1rem;
             color: rgba(255, 255, 255, 0.7);
+        }
+
+        .red-packet {
+            position: fixed;
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .red-packet:hover {
+            transform: scale(1.1);
+        }
+
+        .red-packet-body {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(to bottom, #e74c3c 0%, #c0392b 100%);
+            border-radius: 5px 5px 15px 15px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .red-packet-body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 30px;
+            background: linear-gradient(to bottom, #f1c40f 0%, #f39c12 100%);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .red-packet-body::after {
+            content: '福';
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            color: #f1c40f;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+        }
+
+        .red-packet-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            padding: 30px;
+            border-radius: 15px;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            min-width: 300px;
+        }
+
+        .red-packet-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .red-packet-popup h2 {
+            color: #f1c40f;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+        }
+
+        .red-packet-popup p {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .red-packet-popup .close-btn {
+            background: #f1c40f;
+            color: #c0392b;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .red-packet-popup .close-btn:hover {
+            background: #f39c12;
+            transform: scale(1.05);
+        }
+
+        .red-packet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .red-packet-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @keyframes redPacketFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
         }
 
         .photo-showcase {
@@ -1003,8 +1209,20 @@
             爆竹声中一岁除
         </div>
 
+        <div class="red-packet" id="redPacket" style="top: 60%; left: 50px; animation: redPacketFloat 3s ease-in-out infinite;">
+            <div class="red-packet-body"></div>
+        </div>
+
+        <div class="red-packet-overlay" id="redPacketOverlay"></div>
+        <div class="red-packet-popup" id="redPacketPopup">
+            <h2>🧧 新年红包 🧧</h2>
+            <p>恭喜发财，大吉大利！</p>
+            <p>祝您新年快乐，万事如意！</p>
+            <button class="close-btn" onclick="closeRedPacket()">收下祝福</button>
+        </div>
+
         <div class="music-player">
-            <audio id="bgm" loop autoplay preload="auto">
+            <audio id="bgm" loop preload="auto">
                 <source src="bgm.mp3" type="audio/mpeg">
             </audio>
             <button id="musicBtn" class="music-icon">🔇</button>
@@ -1193,6 +1411,7 @@
                 </div>
                 <div id="aiBlessingResult" class="ai-generated-blessing" style="display: none;"></div>
                 <button class="ai-copy-btn" id="aiCopyBtn" onclick="copyBlessing()" style="display: none;">复制祝福</button>
+                <button class="ai-save-btn" id="aiSaveBtn" onclick="saveBlessingImage()" style="display: none;">📷 保存为精美图片</button>
             </div>
         </div>
 
@@ -1212,10 +1431,13 @@
         const musicBtn = document.getElementById('musicBtn');
 
         let userInteracted = false;
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
         bgm.addEventListener('canplaythrough', () => {
             console.log('音频已加载完成，可以播放');
-            attemptAutoPlay();
+            if (!isIOS) {
+                attemptAutoPlay();
+            }
         });
 
         bgm.addEventListener('loadstart', () => {
@@ -1247,7 +1469,11 @@
             }
         }
 
-        document.addEventListener('click', function(e) {
+        if (!isIOS) {
+            attemptAutoPlay();
+        }
+
+        function handleUserInteraction() {
             if (!userInteracted) {
                 userInteracted = true;
                 if (bgm.paused) {
@@ -1258,12 +1484,21 @@
                         musicBtn.textContent = '🔇';
                     });
                 }
-                console.log('用户点击页面，开始播放音乐');
+                console.log('用户交互，开始播放音乐');
             }
-        }, { once: true });
+        }
+
+        document.addEventListener('click', function(e) {
+            handleUserInteraction();
+        }, { once: true, passive: true });
+
+        document.addEventListener('touchstart', function(e) {
+            handleUserInteraction();
+        }, { once: true, passive: true });
 
         musicBtn.addEventListener('click', (e) => {
             e.stopPropagation();
+            e.preventDefault();
             if (bgm.paused) {
                 bgm.play().then(() => {
                     musicBtn.textContent = '🎵';
@@ -1280,9 +1515,16 @@
         let fireworks = [];
         let particles = [];
         let sparkles = [];
+        let ripples = [];
+        let trails = [];
+        let snowflakes = [];
+        let touchStartX = 0;
+        let touchEndX = 0;
         const isMobile = window.innerWidth <= 768;
         const MAX_FIREWORKS = isMobile ? 1 : 3;
         const MAX_PARTICLES = isMobile ? 100 : 300;
+        const MAX_SNOWFLAKES = isMobile ? 50 : 100;
+        let isPageVisible = true;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -1291,6 +1533,17 @@
 
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
+
+        document.addEventListener('visibilitychange', () => {
+            isPageVisible = !document.hidden;
+            if (!isPageVisible) {
+                bgm.pause();
+            } else if (userInteracted && !bgm.paused) {
+                bgm.play().catch(error => {
+                    console.log('恢复播放失败:', error);
+                });
+            }
+        });
 
         const photoShowcase = document.getElementById('photoShowcase');
         const photoItems = document.querySelectorAll('.photo-item');
@@ -1305,20 +1558,35 @@
 
         setTimeout(animatePhotos, 1000);
 
+        function initSnowflakes() {
+            for (let i = 0; i < MAX_SNOWFLAKES; i++) {
+                snowflakes.push(new Snowflake());
+            }
+        }
+
         function updateCountdown() {
-            const newYear = new Date('2026-02-17T00:00:00').getTime();
-            const now = new Date().getTime();
-            const distance = newYear - now;
+            const now = new Date();
+            const newYear = new Date(2026, 1, 17, 0, 0, 0);
+            const distance = newYear.getTime() - now.getTime();
+
+            console.log('当前时间:', now);
+            console.log('春节时间:', newYear);
+            console.log('距离毫秒:', distance);
 
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById('days').textContent = String(days).padStart(2, '0');
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+
+            if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+            if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+            if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+            if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
         }
 
         function toggleCountdown() {
@@ -1338,8 +1606,12 @@
             }
         }
 
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded事件已触发');
+            alert('DOMContentLoaded事件已触发，开始倒计时');
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        });
 
         function openAIBlessing() {
             document.getElementById('aiBlessingSection').classList.remove('hidden');
@@ -1355,6 +1627,7 @@
         const loadingDiv = document.getElementById('aiLoadingDiv');
         const blessingResult = document.getElementById('aiBlessingResult');
         const copyBtn = document.getElementById('aiCopyBtn');
+        const saveBtn = document.getElementById('aiSaveBtn');
 
         async function generateBlessing() {
             const name = nameInput.value.trim();
@@ -1366,6 +1639,7 @@
             loadingDiv.style.display = 'block';
             blessingResult.style.display = 'none';
             copyBtn.style.display = 'none';
+            saveBtn.style.display = 'none';
 
             try {
                 const prompt = `请为${name}生成一条温馨真挚的新年祝福语，要求：1. 包含${name}的名字 2. 体现新年祝福的主题 3. 语言温馨真挚，富有感染力 4. 内容丰富充实，长度适中，字数在100-200字之间`;
@@ -1380,6 +1654,7 @@
                     blessingResult.textContent = blessing;
                     blessingResult.style.display = 'block';
                     copyBtn.style.display = 'inline-block';
+                    saveBtn.style.display = 'inline-block';
                 } else {
                     throw new Error('生成祝福失败');
                 }
@@ -1404,6 +1679,154 @@
                 console.error('复制失败:', err);
                 alert('复制失败，请手动复制');
             });
+        }
+
+        function saveBlessingImage() {
+            const blessingText = blessingResult.textContent;
+            const name = nameInput.value.trim() || '朋友';
+            
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = 900;
+            canvas.height = 1400;
+            
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#8B0000');
+            gradient.addColorStop(0.3, '#DC143C');
+            gradient.addColorStop(0.5, '#FFD700');
+            gradient.addColorStop(0.7, '#DC143C');
+            gradient.addColorStop(1, '#8B0000');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = 'rgba(255, 215, 0, 0.15)';
+            for (let i = 0; i < 100; i++) {
+                ctx.beginPath();
+                ctx.arc(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height,
+                    Math.random() * 4 + 2,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+            }
+            
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+            
+            ctx.strokeStyle = '#FF0000';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(45, 45, canvas.width - 90, canvas.height - 90);
+            
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([10, 5]);
+            ctx.strokeRect(55, 55, canvas.width - 110, canvas.height - 110);
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = '#FFD700';
+            ctx.font = 'bold 64px "Microsoft YaHei", "SimSun", serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = '#8B0000';
+            ctx.shadowBlur = 10;
+            ctx.fillText('🧧 新年祝福 🧧', canvas.width / 2, 140);
+            ctx.shadowBlur = 0;
+            
+            ctx.font = 'bold 36px "Microsoft YaHei", "SimSun", serif';
+            ctx.fillStyle = '#FFD700';
+            ctx.fillText(`致：${name}`, canvas.width / 2, 230);
+            
+            ctx.fillStyle = '#FFD700';
+            ctx.font = 'bold 28px "Microsoft YaHei", "SimSun", serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('━━━━━━━━━━━━━━━━━━━━━━', canvas.width / 2, 280);
+            
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '32px "Microsoft YaHei", "SimSun", serif';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            
+            const maxWidth = canvas.width - 180;
+            const lineHeight = 50;
+            const startY = 340;
+            let currentY = startY;
+            
+            const words = blessingText.split('');
+            let line = '';
+            
+            for (let i = 0; i < words.length; i++) {
+                const testLine = line + words[i];
+                const metrics = ctx.measureText(testLine);
+                
+                if (metrics.width > maxWidth && i > 0) {
+                    ctx.fillText(line, 90, currentY);
+                    line = words[i];
+                    currentY += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, 90, currentY);
+            
+            ctx.fillStyle = '#FFD700';
+            ctx.font = 'bold 28px "Microsoft YaHei", "SimSun", serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('━━━━━━━━━━━━━━━━━━━━━━', canvas.width / 2, currentY + lineHeight + 30);
+            
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            
+            ctx.fillStyle = '#FFD700';
+            ctx.font = 'italic 32px "Microsoft YaHei", "SimSun", serif';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'bottom';
+            ctx.shadowColor = '#8B0000';
+            ctx.shadowBlur = 5;
+            ctx.fillText(`—— 董旗 敬上`, canvas.width - 90, canvas.height - 180);
+            ctx.shadowBlur = 0;
+            
+            ctx.font = 'bold 36px "Microsoft YaHei", "SimSun", serif';
+            ctx.fillStyle = '#FFD700';
+            ctx.textAlign = 'center';
+            ctx.fillText('✨ 新年快乐 ✨', canvas.width / 2, canvas.height - 110);
+            
+            ctx.font = '24px "Microsoft YaHei", "SimSun", serif';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillText(`${year}年${month}月${day}日`, canvas.width / 2, canvas.height - 70);
+            
+            ctx.font = 'bold 28px "Microsoft YaHei", "SimSun", serif';
+            ctx.fillStyle = '#FFD700';
+            ctx.fillText('🎊 万事如意 🎊', canvas.width / 2, canvas.height - 40);
+            
+            const link = document.createElement('a');
+            link.download = `新年祝福_${name}_${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = '已保存！';
+            setTimeout(() => {
+                saveBtn.textContent = originalText;
+            }, 2000);
+        }
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchEndX - touchStartX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    console.log('向右滑动');
+                } else {
+                    console.log('向左滑动');
+                }
+            }
         }
 
         class Firework {
@@ -1570,6 +1993,126 @@
             }
         }
 
+        class Ripple {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 0;
+                this.maxRadius = 100;
+                this.alpha = 1;
+                this.hue = Math.random() * 360;
+            }
+
+            update() {
+                this.radius += 5;
+                this.alpha -= 0.03;
+                return this.alpha <= 0;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalCompositeOperation = 'lighter';
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `hsl(${this.hue}, 100%, 70%)`;
+                ctx.lineWidth = 3;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = `hsl(${this.hue}, 100%, 70%)`;
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        class Trail {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 3 + 2;
+                this.alpha = 1;
+                this.hue = Math.random() * 360;
+                this.decay = Math.random() * 0.02 + 0.01;
+            }
+
+            update() {
+                this.alpha -= this.decay;
+                this.size *= 0.98;
+                return this.alpha <= 0 || this.size < 0.5;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalCompositeOperation = 'lighter';
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `hsl(${this.hue}, 100%, 70%)`;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = `hsl(${this.hue}, 100%, 70%)`;
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        class Snowflake {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvas.height;
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -10;
+                this.size = Math.random() * 3 + 1;
+                this.speed = Math.random() * 1 + 0.5;
+                this.wind = Math.random() * 0.5 - 0.25;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = Math.random() * 0.02 - 0.01;
+            }
+
+            update() {
+                this.y += this.speed;
+                this.x += this.wind + Math.sin(this.y * 0.01) * 0.3;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > canvas.height + 10) {
+                    this.reset();
+                }
+
+                if (this.x < -10 || this.x > canvas.width + 10) {
+                    this.x = (this.x < -10) ? canvas.width + 10 : -10;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+
+                ctx.beginPath();
+                ctx.fillStyle = '#fff';
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
+
+                for (let i = 0; i < 6; i++) {
+                    const angle = (Math.PI / 3) * i;
+                    const length = this.size * 3;
+                    
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(Math.cos(angle) * length, Math.sin(angle) * length);
+                    ctx.lineTo(Math.cos(angle + 0.1) * (length * 0.3), Math.sin(angle + 0.1) * (length * 0.3));
+                    ctx.lineTo(0, 0);
+                }
+
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        initSnowflakes();
+
         function createFirework() {
             if (fireworks.length >= MAX_FIREWORKS) {
                 return;
@@ -1626,6 +2169,28 @@
                 }
             }
 
+            for (let i = ripples.length - 1; i >= 0; i--) {
+                const ripple = ripples[i];
+                ripple.draw();
+                if (ripple.update()) {
+                    ripples.splice(i, 1);
+                }
+            }
+
+            for (let i = trails.length - 1; i >= 0; i--) {
+                const trail = trails[i];
+                trail.draw();
+                if (trail.update()) {
+                    trails.splice(i, 1);
+                }
+            }
+
+            for (let i = snowflakes.length - 1; i >= 0; i--) {
+                const snowflake = snowflakes[i];
+                snowflake.draw();
+                snowflake.update();
+            }
+
             requestAnimationFrame(animate);
         }
 
@@ -1635,7 +2200,9 @@
             }
         }, 600);
 
-        animate();
+        if (!isIOS) {
+            animate();
+        }
 
         document.addEventListener('click', (e) => {
             const rect = canvas.getBoundingClientRect();
@@ -1643,7 +2210,35 @@
             const y = e.clientY - rect.top;
             const startX = Math.random() * canvas.width;
             fireworks.push(new Firework(startX, canvas.height, x, y));
+            ripples.push(new Ripple(x, y));
         });
+
+        document.addEventListener('touchstart', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            ripples.push(new Ripple(x, y));
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: false });
+
+        document.addEventListener('touchmove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            for (let i = 0; i < 2; i++) {
+                trails.push(new Trail(
+                    x + (Math.random() - 0.5) * 20,
+                    y + (Math.random() - 0.5) * 20
+                ));
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: false });
 
         const observerOptions = {
             threshold: 0.2
@@ -1661,33 +2256,58 @@
             observer.observe(card);
         });
 
-        let touchStartX = 0;
-        let touchEndX = 0;
-        let currentCardIndex = 0;
-        const blessingCards = document.querySelectorAll('.blessing-card');
-
-        function handleSwipe() {
-            const swipeThreshold = 50;
-            const diff = touchStartX - touchEndX;
-
-            if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0) {
-                    currentCardIndex = Math.min(currentCardIndex + 1, blessingCards.length - 1);
-                } else {
-                    currentCardIndex = Math.max(currentCardIndex - 1, 0);
+        if (isIOS) {
+            console.log('iOS设备检测，启用优化模式');
+            
+            const originalAnimate = animate;
+            let lastTime = 0;
+            const targetFPS = 30;
+            const frameInterval = 1000 / targetFPS;
+            
+            animate = function(timestamp) {
+                if (!isPageVisible) {
+                    requestAnimationFrame(animate);
+                    return;
                 }
-                blessingCards[currentCardIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+                
+                const elapsed = timestamp - lastTime;
+                
+                if (elapsed > frameInterval) {
+                    lastTime = timestamp - (elapsed % frameInterval);
+                    originalAnimate();
+                }
+                
+                requestAnimationFrame(animate);
+            };
+            
+            requestAnimationFrame(animate);
         }
 
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, false);
+        const redPacket = document.getElementById('redPacket');
+        const redPacketPopup = document.getElementById('redPacketPopup');
+        const redPacketOverlay = document.getElementById('redPacketOverlay');
 
-        document.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, false);
+        redPacket.addEventListener('click', () => {
+            redPacketPopup.classList.add('show');
+            redPacketOverlay.classList.add('show');
+            
+            const blessings = [
+                '恭喜发财，大吉大利！',
+                '新年快乐，万事如意！',
+                '财源广进，步步高升！',
+                '身体健康，阖家幸福！',
+                '心想事成，好运连连！'
+            ];
+            const randomBlessing = blessings[Math.floor(Math.random() * blessings.length)];
+            redPacketPopup.querySelector('p:nth-child(3)').textContent = randomBlessing;
+        });
+
+        function closeRedPacket() {
+            redPacketPopup.classList.remove('show');
+            redPacketOverlay.classList.remove('show');
+        }
+
+        redPacketOverlay.addEventListener('click', closeRedPacket);
     </script>
 </body>
 </html>
