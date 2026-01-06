@@ -1000,10 +1000,10 @@
         </div>
 
         <div class="music-player">
-            <audio id="bgm" loop autoplay>
+            <audio id="bgm" loop autoplay preload="auto">
                 <source src="bgm.mp3" type="audio/mpeg">
             </audio>
-            <button id="musicBtn" class="music-icon">🎵</button>
+            <button id="musicBtn" class="music-icon">🔇</button>
         </div>
 
         <div class="countdown-container" id="countdownContainer">
@@ -1209,25 +1209,51 @@
 
         let userInteracted = false;
 
-        function attemptAutoPlay() {
-            bgm.play().then(() => {
-                console.log('自动播放成功');
-                musicBtn.textContent = '🎵';
-            }).catch(error => {
-                console.log('自动播放被阻止，等待用户点击页面:', error);
-                musicBtn.textContent = '🔇';
-            });
-        }
+        bgm.addEventListener('canplaythrough', () => {
+            console.log('音频已加载完成，可以播放');
+            attemptAutoPlay();
+        });
 
-        attemptAutoPlay();
+        bgm.addEventListener('loadstart', () => {
+            console.log('开始加载音频');
+            musicBtn.textContent = '⏳';
+        });
+
+        bgm.addEventListener('waiting', () => {
+            console.log('音频缓冲中...');
+            musicBtn.textContent = '⏳';
+        });
+
+        bgm.addEventListener('playing', () => {
+            console.log('音频正在播放');
+            musicBtn.textContent = '🎵';
+        });
+
+        function attemptAutoPlay() {
+            if (bgm.readyState >= 3) {
+                bgm.play().then(() => {
+                    console.log('自动播放成功');
+                    musicBtn.textContent = '🎵';
+                }).catch(error => {
+                    console.log('自动播放被阻止，等待用户点击页面:', error);
+                    musicBtn.textContent = '🔇';
+                });
+            } else {
+                console.log('音频尚未加载完成');
+            }
+        }
 
         document.addEventListener('click', function(e) {
             if (!userInteracted) {
                 userInteracted = true;
                 if (bgm.paused) {
-                    bgm.play();
+                    bgm.play().then(() => {
+                        musicBtn.textContent = '🎵';
+                    }).catch(error => {
+                        console.log('播放失败:', error);
+                        musicBtn.textContent = '🔇';
+                    });
                 }
-                musicBtn.textContent = '🎵';
                 console.log('用户点击页面，开始播放音乐');
             }
         }, { once: true });
@@ -1235,8 +1261,12 @@
         musicBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (bgm.paused) {
-                bgm.play();
-                musicBtn.textContent = '🎵';
+                bgm.play().then(() => {
+                    musicBtn.textContent = '🎵';
+                }).catch(error => {
+                    console.log('播放失败:', error);
+                    musicBtn.textContent = '🔇';
+                });
             } else {
                 bgm.pause();
                 musicBtn.textContent = '🔇';
@@ -1656,5 +1686,4 @@
         }, false);
     </script>
 </body>
-
 </html>
