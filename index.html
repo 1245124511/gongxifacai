@@ -1184,6 +1184,22 @@
                 padding: 12px 20px;
                 font-size: 0.9rem;
             }
+
+            .red-packet-body {
+                width: 50px;
+                height: 65px;
+            }
+
+            .red-packet-body::before {
+                width: 25px;
+                height: 20px;
+            }
+
+            .red-packet-body::after {
+                width: 15px;
+                height: 15px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -1432,6 +1448,12 @@
 
         let userInteracted = false;
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        bgm.addEventListener('error', (e) => {
+            console.log('音频加载错误:', e);
+            console.log('音频错误详情:', bgm.error);
+            musicBtn.textContent = '❌';
+        });
 
         bgm.addEventListener('canplaythrough', () => {
             console.log('音频已加载完成，可以播放');
